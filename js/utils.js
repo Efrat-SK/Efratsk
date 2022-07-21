@@ -23,7 +23,7 @@ function createBoard(boardSize) {
 function renderBoard(board) {
 
     
-    var strHTML = '<table border="1"><tbody>'
+    var strHTML = '<table border="0"><tbody>'
 
     for (var i = 0; i < board.length; i++) {
 
