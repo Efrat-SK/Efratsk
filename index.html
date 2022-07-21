@@ -11,13 +11,31 @@
 
 <body onload="init()">
     <h1>Minesweeper</h1>
-    <div>
+
+    <div class="level-btns">
         <button class="levelBtn" onclick="chooseLevel(this)">Beginner</button>
         <button class="levelBtn" onclick="chooseLevel(this)">Medium</button>
         <button class="levelBtn" onclick="chooseLevel(this)">Expert</button>
     </div>
 
-    <div class="timer">Lets start!</div>
+    <div>
+        <table border="0">
+            <tbody>
+                <tr>
+                    <td class="container">
+                        <div class="timer">00:00:00</div>
+                    </td>
+                    <td class="container">
+                        <div class="smylie"></div>
+                    </td>
+
+                    <td class="container">empty</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="msg">lets start!</div>
     <div class="board-container">
     </div>
 
