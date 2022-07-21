@@ -10,6 +10,7 @@ const FLAG = '<img src="img/Flag.png"/>'
 const HPPYE = '<img src="img/Smile-happy.png"/ onclick="init()">'
 const DEAD = '<img src="img/Smile-dead.png"/ onclick="init()">'
 const WINNER = '<img src="img/Smile-winner.png"/ onclick="init()">'
+const HART = '<img src="img/Hart.gif"/>'
 
 var gBoard
 var gMinesLocations
@@ -32,7 +33,7 @@ function init() {
         secsPassed: 0, ////////////////////////////////////////////////////////////////////////////////////////
         minesWereRevealed: false,
         flagWasMarked: false,
-        loses: 0
+        lives: 3
     }
 
     gBoard = buildBoard()
@@ -43,6 +44,9 @@ function init() {
     var elMsg = document.querySelector('.msg')
     elMsg.innerHTML = 'Lets start!'
 
+    //lives
+    livesRender()
+
     //smylie - happy
     var elSmylie = document.querySelector('.smylie')
     elSmylie.innerHTML = HPPYE
@@ -51,8 +55,28 @@ function init() {
     clearInterval(gameInterval)
     var elTimer = document.querySelector('.timer')
     elTimer.innerHTML = '00:00:00'
-    
 
+
+}
+
+function livesRender() {
+    var hartsRow
+    switch (gGame.lives) {
+        case 3:
+            hartsRow = HART + HART + HART
+            break;
+        case 2:
+            hartsRow = HART + HART
+            break;
+        case 1:
+            hartsRow = HART
+            break;
+        case 0:
+            hartsRow = ''
+            break;
+    }
+    var elSmylie = document.querySelector('.lives')
+    elSmylie.innerHTML = hartsRow
 }
 
 function chooseLevel(elBtn) {
@@ -120,21 +144,34 @@ function cellLeftClicked(elCell, i, j) {
     //mark as shown
     elCell.style.backgroundColor = '#CCFF99'
 
-    //if mine - show all mines , end game
+    //if mine
     if (gBoard[i][j].isMine) {
-        for (var i = 0; i < gMinesLocations.length; i++) {
-            var mineLocation = gMinesLocations[i]
+        gGame.minesWereRevealed = true
+        gGame.lives--
 
-            var selector = `[data-i="${mineLocation.i}"][data-j="${mineLocation.j}"]`
+        //if 0 lives - show all mines , end game
+        if (gGame.lives === 0 || gLevels[gChosenLevel].MINES === 3 - gGame.lives) {
+            for (var i = 0; i < gMinesLocations.length; i++) {
+                var mineLocation = gMinesLocations[i]
+
+                var selector = `[data-i="${mineLocation.i}"][data-j="${mineLocation.j}"]`
+                elCell = document.querySelector(selector)
+                renderCell(elCell, MINE)
+                livesRender()
+            }
+
+            stopGame('Better lack next time...', DEAD)
+            return
+        }
+
+        else {
+            livesRender()
+            var selector = `[data-i="${i}"][data-j="${j}"]`
             elCell = document.querySelector(selector)
+            console.log('elCell 1: ', elCell)
             renderCell(elCell, MINE)
         }
-        gGame.loses++
-        gGame.minesWereRevealed = true
-        // checkGameOver()
 
-        stopGame('Better lack next time...' , DEAD)
-        return
     }
 
     //if number - show number
@@ -205,7 +242,8 @@ function isFirstClick(cellI, cellJ) {
         gameInterval = setInterval(timer, 31)
 
         //set mines rundomly
-        console.log('gBoard-isFirstClick: ', gBoard)
+        // console.log('i: ', cellI, ' , j: ', cellJ)
+        // console.log('gBoard-isFirstClick: ', gBoard)
         locateMines(gLevels[gChosenLevel].MINES, gBoard, cellI, cellJ)
 
         //setMinesNegsCount(board)
@@ -218,47 +256,51 @@ function isFirstClick(cellI, cellJ) {
 }
 
 function locateMines(minesAmount, board, cellI, cellJ) {
-
     gMinesLocations = []
 
     for (var i = 0; i < minesAmount; i++) {
+
         var randomCell = getRandomEmpyCell(board, cellI, cellJ)
+
         board[randomCell.i][randomCell.j].isMine = true
         gMinesLocations.push(randomCell)
     }
 }
 
 function getRandomEmpyCell(board, cellI, cellJ) {
-    const emptyCells = []
 
+    var emptyCells = []
+    console.log('orugunal - i: ', cellI, ' , j: ', cellJ)
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
 
-            if (!board[i][j].isMine && i !== cellI && j !== cellJ) {
+
+            if (!board[i][j].isMine && (i !== cellI || j !== cellJ)) {
                 emptyCells.push({ i, j })
             }
         }
     }
-    const idx = getRandomInt(0, emptyCells.length)
+
+    var idx = getRandomInt(0, emptyCells.length - 1)
     return emptyCells[idx]
 }
 
 function checkGameOver() {
     var NumNoMineCell = gLevels[gChosenLevel].SIZE ** 2 - gLevels[gChosenLevel].MINES
-    
+
     //if all mines are marked and all oter cell shown its a win
     if (gGame.markedCount === gLevels[gChosenLevel].MINES && gGame.shownCount === NumNoMineCell) {
-        stopGame('You win!' , WINNER)
+        stopGame('You win!', WINNER)
     }
 
     //if lose 3 times
     else if (gGame.loses === 3) {
-        stopGame('Better lack next time...' , DEAD)
+        stopGame('Better lack next time...', DEAD)
     }
 }
 
 
-function stopGame(msg , smylie) {
+function stopGame(msg, smylie) {
     clearInterval(gameInterval)
     gGame.isOn = false
 
