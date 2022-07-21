@@ -77,13 +77,6 @@ h1{
     font-family: fantasy;
 }
 
-.timer{
-    width: 150px;
-    text-align: center;
-    padding: 15px;
-    font-style: oblique;
-}
-
 .hints{
     opacity: 1;
     display: block;

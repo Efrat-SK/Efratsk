@@ -11,7 +11,6 @@ const HPPYE = '<img src="img/Smile-happy.png"/ onclick="init()">'
 const DEAD = '<img src="img/Smile-dead.png"/ onclick="init()">'
 const WINNER = '<img src="img/Smile-winner.png"/ onclick="init()">'
 const HART = '<img src="img/Hart.gif"/>'
-const LIGHT = '<img src="img/light.png"/>'
 
 var gBoard
 var gMinesLocations
@@ -33,15 +32,11 @@ function init() {
         markedCount: 0,
         minesWereRevealed: false,
         flagWasMarked: false,
-        lives: 3,
-        hints: 3,
+        lives: 3
     }
 
     gBoard = buildBoard()
     renderBoard(gBoard)
-
-    //hints
-    hintsRender()
 
     //lives
     livesRender()
@@ -59,11 +54,6 @@ function init() {
     var elTimer = document.querySelector('.timer')
     elTimer.innerHTML = '00:00:00'
 
-}
-
-function hintsRender() {
-    var elHints = document.querySelector('.hints')
-    elHints.innerHTML = getRow(LIGHT, gGame.hints)
 }
 
 function livesRender() {
