@@ -11,6 +11,7 @@ const HPPYE = '<img src="img/Smile-happy.png"/ onclick="init()">'
 const DEAD = '<img src="img/Smile-dead.png"/ onclick="init()">'
 const WINNER = '<img src="img/Smile-winner.png"/ onclick="init()">'
 const HART = '<img src="img/Hart.gif"/>'
+const LIGHT = '<img src="img/light.png"/>'
 
 var gBoard
 var gMinesLocations
@@ -30,19 +31,17 @@ function init() {
         isOn: false,
         shownCount: 0,
         markedCount: 0,
-        secsPassed: 0, ////////////////////////////////////////////////////////////////////////////////////////
         minesWereRevealed: false,
         flagWasMarked: false,
-        lives: 3
+        lives: 3,
+        hints: 3,
     }
 
     gBoard = buildBoard()
-    console.log('gBoard-init: ', gBoard)///////////////////////////////////////////////////to cut
     renderBoard(gBoard)
 
-    //msg Lets start!
-    var elMsg = document.querySelector('.msg')
-    elMsg.innerHTML = 'Lets start!'
+    //hints
+    hintsRender()
 
     //lives
     livesRender()
@@ -51,32 +50,44 @@ function init() {
     var elSmylie = document.querySelector('.smylie')
     elSmylie.innerHTML = HPPYE
 
+    //msg Lets start!
+    var elMsg = document.querySelector('.msg')
+    elMsg.innerHTML = 'Lets start!'
+
     //restart the clock
     clearInterval(gameInterval)
     var elTimer = document.querySelector('.timer')
     elTimer.innerHTML = '00:00:00'
 
+}
 
+function hintsRender() {
+    var elHints = document.querySelector('.hints')
+    elHints.innerHTML = getRow(LIGHT, gGame.hints)
 }
 
 function livesRender() {
-    var hartsRow
-    switch (gGame.lives) {
+    var elLives = document.querySelector('.lives')
+    elLives.innerHTML = getRow(HART, gGame.lives)
+}
+
+function getRow(value, length) {
+    var row
+    switch (length) {
         case 3:
-            hartsRow = HART + HART + HART
+            row = value + value + value
             break;
         case 2:
-            hartsRow = HART + HART
+            row = value + value
             break;
         case 1:
-            hartsRow = HART
+            row = value
             break;
         case 0:
-            hartsRow = ''
+            row = ''
             break;
     }
-    var elSmylie = document.querySelector('.lives')
-    elSmylie.innerHTML = hartsRow
+    return row
 }
 
 function chooseLevel(elBtn) {
@@ -115,9 +126,7 @@ function setMinesNegsCount(board) {
     }
 }
 
-function timer() { /////////////////////////////////////////////////////////////to improve
-
-    // secsPassed =?
+function timer() { 
 
     var currTime = new Date().getTime()
     var timePassed = new Date(currTime - gStartTime)
@@ -168,7 +177,6 @@ function cellLeftClicked(elCell, i, j) {
             livesRender()
             var selector = `[data-i="${i}"][data-j="${j}"]`
             elCell = document.querySelector(selector)
-            console.log('elCell 1: ', elCell)
             renderCell(elCell, MINE)
         }
 
@@ -191,7 +199,6 @@ function cellLeftClicked(elCell, i, j) {
 
 function expandShown(board, elCell, cellI, cellJ) {
 
-
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
 
@@ -206,7 +213,6 @@ function expandShown(board, elCell, cellI, cellJ) {
             }
         }
     }
-
 }
 
 function cellRightClicked(elCell, i, j) {
@@ -270,7 +276,6 @@ function locateMines(minesAmount, board, cellI, cellJ) {
 function getRandomEmpyCell(board, cellI, cellJ) {
 
     var emptyCells = []
-    console.log('orugunal - i: ', cellI, ' , j: ', cellJ)
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
 

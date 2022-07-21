@@ -28,7 +28,6 @@ table{
 img {
     width: 30px;
     height: 30px;
-    background: none;
 }
 
 h1{
@@ -61,15 +60,6 @@ h1{
     font-style: oblique;
 }
 
-.timer{
-    /* height: 35px;
-    width: 100px; */
-    text-align: center;
-    /* padding: 10px; */
-    /* background-color: gray; */
-    /* font-style: oblique; */
-}
-
 .container{
     height: 35px;
     width: 100px;
@@ -81,9 +71,22 @@ h1{
 }
 
 .msg{
-    height: 35px;
-    width: 300px;
+    width: 150px;
     text-align: center;
     padding: 10px;
+    font-family: fantasy;
+}
+
+.timer{
+    width: 150px;
+    text-align: center;
+    padding: 15px;
     font-style: oblique;
 }
+
+.hints{
+    opacity: 1;
+    display: block;
+}
+
+

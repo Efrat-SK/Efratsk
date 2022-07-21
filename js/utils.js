@@ -66,7 +66,6 @@ function countNeighbors(cellI, cellJ, mat) {
 
 
 function renderCell(elCell, value) {
-    console.log('elCell 2: ', elCell)
     elCell.innerHTML = value
 }
 
