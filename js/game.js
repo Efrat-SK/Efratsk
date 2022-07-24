@@ -290,7 +290,7 @@ function checkGameOver() {
 
     //if lose 3 times
     else if (gGame.loses === 3) {
-        stopGame('Better lack next time...', DEAD)
+        stopGame('Better luck next time...', DEAD)
     }
 }
 
